@@ -1,0 +1,35 @@
+# === Vivado temporäre Dateien ===
+.Xil/
+*.jou
+*.log
+*.pb
+*.str
+*.dir/
+
+# === Xsim (Simulation) ===
+xsim.dir/
+*.wdb
+waves.vcd
+*.vcd
+
+# === Build-Ausgaben und Reports ===
+# Bitstreams sind Binärdateien und gehören meist nicht in Git 
+# (außer du willst feste Releases markieren)
+*.bit
+*.bin
+*.ltx
+
+# Text-Reports (Timing, Utilization etc.)
+*.rpt
+*.txt
+
+# === Vivado Projekt-Artefakte (falls doch mal eine GUI genutzt wird) ===
+*.cache/
+*.hw/
+*.ip_user_files/
+*.runs/
+*.sim/
+
+# === OS-spezifische Dateien ===
+.DS_Store
+Thumbs.db
