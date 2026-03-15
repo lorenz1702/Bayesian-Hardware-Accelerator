@@ -82,6 +82,7 @@ module sync_fifo #(
         fifo_full = (wr_ptr_nxt == rd_ptr);
         // not ready
         
+        
     end
     always_comb
         fifo_empty = (rd_ptr == wr_ptr);
