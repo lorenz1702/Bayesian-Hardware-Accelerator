@@ -5,7 +5,7 @@ module rom(
     input wire [3:0] address,
     output reg signed [7:0] mu,
     output reg signed [7:0] sigma,
-    output reg signed [23:0] bias
+    output reg signed [7:0] bias
 
     );
     

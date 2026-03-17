@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-typedef enum{
+typedef enum logic [1:0]{
     IDLE,
     FETCH_WEIGHTS,
     CALC,
@@ -24,18 +24,20 @@ module main_fsm(
 
 );
 
-State state, next_state;
+State current_state, next_state;
 
-always_ff @(posedge clk) begin
+always_ff @(posedge clk or posedge reset) begin
     if (reset) begin
-        state <= IDLE;
+        current_state   <= IDLE;
     end else begin
-        state <= next_state;
+        current_state   <= next_state;
+        bnn_valid       <= 1'b0;
     end
 end
 
 always_comb begin
-    case (state) 
+
+    case (current_state) 
         IDLE: begin
             next_state = (sync_start==2'b01) ? FETCH_WEIGHTS : IDLE;
         end
@@ -49,9 +51,13 @@ always_comb begin
             end
         end
         CALC: begin
-            
+            if (clt_is_valid & alu_ready_out)begin
+                next_state = DONE;
+            end
         end
         DONE: begin
+            bnn_valid = 1'b1;
+            next_state = IDLE;
             
         end
         default: begin

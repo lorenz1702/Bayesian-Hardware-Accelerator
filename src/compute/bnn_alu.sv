@@ -32,25 +32,24 @@ module bnn_alu(
 
     assign y_out = y_acc;
     
+    always_comb begin
+        w = mu + (sigma * epsilon);
+        product = (w * x) + bias; 
+    end
+
+
     always_ff @(posedge clk) begin
         if (reset) begin 
             y_acc <= 0;
             valid_out <= 0;
         end else begin
             if (valid_in && ready_out) begin
-                w = mu + (sigma * epsilon);
-
-                product = w * x + bias;
-                // Comment in for bigger models
-                // y_acc <= y_acc + product
+                // y_acc <= y_acc + product; // Für echtes Akkumulieren
                 y_acc <= product;
-
                 valid_out <= 1;
             end else if (valid_out && ready_in) begin
                 valid_out <= 0;
             end
-
         end
-        
     end
 endmodule
