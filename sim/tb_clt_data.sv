@@ -31,7 +31,7 @@ module tb_clt_data;
         .NUM_STAGES(NUM_STAGES),
         .WIDTH(WIDTH),
         .TAPS(TAPS),
-        .BASE_SEED(BASE_SEED)
+        .BASE_SEED(SEED)
     ) u_clt (
         .clk(clk),
         .reset_n(rst_n),

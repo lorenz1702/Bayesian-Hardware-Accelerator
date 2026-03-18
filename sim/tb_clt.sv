@@ -8,7 +8,7 @@ module tb_clt;
 
 
     reg clk;
-    reg rst_n;
+    reg rst;
     reg enable;
 
     reg clt_valid;
@@ -19,11 +19,11 @@ module tb_clt;
 
 
     CLT #(
-        .NUM_STAGES(NUM_STAGES),
+        .NUM_STAGES(3),
         .WIDTH(WIDTH)
     )CLT_tb(
         .clk(clk),
-        .reset_n(rst_n),
+        .reset(rst),
         .enable(enable),
         .clt_valid(clt_valid),
         .clt_out(clt_out)
@@ -33,11 +33,11 @@ module tb_clt;
 
     initial begin
         clk = 0;
-        rst_n = 0;
+        rst = 1;
 
         #20;
 
-        rst_n = 1; 
+        rst = 0; 
 
         enable = 1;
 

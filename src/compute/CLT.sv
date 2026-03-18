@@ -24,7 +24,7 @@ generate
     .SEED(BASE_SEED ^ (i * 32'h9E3779B1)),        
     .TAPS(TAPS) )lfsr_u(
         .clk(clk),
-        .rst_n(reset),
+        .rst(reset),
         .lfsr(lfsr_state[i])
     );
 
