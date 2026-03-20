@@ -19,7 +19,7 @@ module rom(
     end
     
     always @(*) begin
-        // Die oberen 8 Bit sind mu, die unteren 8 Bit sind sigma
+        // the first 8 Bit are mu, the latest 8 Bit are sigma
         mu    = rom_array[address][15:8];
         sigma = rom_array[address][7:0];
         

@@ -9,8 +9,8 @@ Um das Projekt effizient in einer Woche abzuschließen, wurde der ursprüngliche
 **🧩 Abgedeckte Patterns:** `Structural and generic code`, `Arithmetic blocks`
 
 **✅ Aufgaben:**
-- [ ] Schreibe ein parametrisierbares LFSR-Modul (nutze `parameter` für die Breite).
-- [ ] Instanziiere 12 dieser LFSRs und nutze einen Addierer-Baum (**Adder Tree**), um sie in einem Takt aufzusummieren (Anwendung des Zentralen Grenzwertsatzes / CLT).
+- [X] Schreibe ein parametrisierbares LFSR-Modul (nutze `parameter` für die Breite).
+- [X] Instanziiere 12 dieser LFSRs und nutze einen Addierer-Baum (**Adder Tree**), um sie in einem Takt aufzusummieren (Anwendung des Zentralen Grenzwertsatzes / CLT).
 - [ ] Ziehe einen konstanten Offset ab, um den Mittelwert auf 0 zu zentrieren.
 
 > **🏆 Tages-Ziel:** Ein funktionsfähiges Modul, das jeden Taktzyklus eine normalverteilte Zufallszahl generiert.
@@ -60,8 +60,7 @@ Um das Projekt effizient in einer Woche abzuschließen, wurde der ursprüngliche
 **🎯 Fokus:** Beweisen, dass das System funktioniert (ohne unnötigen UVM-Overhead).  
 **🧩 Abgedeckte Patterns:** `Various verification techniques`
 
-**✅ Aufgaben:**
-- [ ] Schreibe ein kurzes C-Skript, das exakt die Bayes'sche lineare Regression rechnet, und binde es über **DPI-C** (Direct Programming Interface) in SystemVerilog ein.
+**✅ Aufgaben:**- [ ] Schreibe ein kurzes C-Skript, das exakt die Bayes'sche lineare Regression rechnet, und binde es über **DPI-C** (Direct Programming Interface) in SystemVerilog ein.
 - [ ] Baue eine kompakte, strukturierte Testbench (UVM-lite oder Layered Testbench).
 - [ ] Nutze **Constrained Random Verification (CRV)**, um zufällige Matrizen für `X`, `μ` und `σ` zu erzeugen.
 - [ ] Füttere die Stimuli in das Top-Level-Modul und vergleiche am Ende jeden Taktzyklus das Hardware-Ergebnis mit dem Output des DPI-C Modells.
