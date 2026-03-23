@@ -12,7 +12,7 @@ SNAPSHOT="${TOP_MODULE}_snapshot"
 echo "=== Starting simulation for: $TOP_MODULE ==="
 
 echo "Compiling..."
-xvlog -sv ../src/memory/*.sv ../src/control/*.sv ../src/compute/*.sv ../sim/*.sv ../sim/memory/*.sv ../src/*.sv
+xvlog -sv ../src/memory/*.sv ../src/control/*.sv ../src/compute/*.sv ../sim/*.sv ../sim/memory/*.sv ../sim/compute/*.sv ../src/*.sv
 
 echo "Elaborating..."
 xelab -debug typical -top $TOP_MODULE -snapshot $SNAPSHOT

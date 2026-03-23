@@ -13,7 +13,7 @@ module bnn_alu(
     input signed [7:0] x,
     input signed [7:0] mu,
     input signed [7:0] sigma,
-    input signed [7:0] epsilon,
+    input signed [9:0] epsilon,
     input signed [7:0] bias,
 
     //Handshake Output 
@@ -33,8 +33,8 @@ module bnn_alu(
     assign y_out = y_acc;
     
     always_comb begin
-        w = mu + (sigma * epsilon);
-        product = (w * x) + bias; 
+        w = (16'(mu) <<< 6) + (sigma * epsilon);
+        product = (w * x) + (32'(bias) <<< 12);
     end
 
 
