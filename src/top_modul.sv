@@ -8,7 +8,7 @@ module top_modul(
     input logic       x_valid,
     output logic [31:0] bnn_result,
     output logic        bnn_valid,
-    input logic         ready_to_resive      
+    input logic         ready_to_receive      
 );
 
     logic [7:0] fifo_data_out;

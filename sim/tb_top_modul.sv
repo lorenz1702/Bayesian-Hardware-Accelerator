@@ -23,7 +23,7 @@ module tb_top_modul;
         .x_valid(pixel_valid),
         .bnn_result(bnn_result),
         .bnn_valid(bnn_valid), //,
-        .ready_to_resive(bnn_ready_in)
+        .ready_to_receive(bnn_ready_in)
     );
 
     // --- 3. Den Takt (100 MHz) erzeugen ---
@@ -72,9 +72,9 @@ module tb_top_modul;
         pixel_in = 8'd50;
         pixel_valid = 1; // "Push" in den FIFO
         @(posedge clk);
-        pixel_valid = 0; // Direkt wieder wegnehmen, damit nur 1 Pixel reingeht
+        pixel_valid = 0; 
         
-        // Jetzt warten wir, bis unsere FSM das 'bnn_valid' Signal feuert!
+
         wait(bnn_valid == 1'b1);
         @(posedge clk); // Einen Takt warten, damit das Ergebnis stabil anliegt
         

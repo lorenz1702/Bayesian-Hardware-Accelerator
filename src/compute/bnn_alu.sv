@@ -25,7 +25,7 @@ module bnn_alu(
 
     logic signed [31:0] y_acc;
 
-    logic signed [15:0] w;
+    logic signed [17:0] w;
     logic signed [31:0] product;
 
     assign ready_out = ready_in;
@@ -33,7 +33,7 @@ module bnn_alu(
     assign y_out = y_acc;
     
     always_comb begin
-        w = (16'(mu) <<< 6) + (sigma * epsilon);
+        w = (18'(mu) <<< 6) + (sigma * epsilon);
         product = (w * x) + (32'(bias) <<< 12);
     end
 
