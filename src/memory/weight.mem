@@ -1,5 +1,2 @@
 // Format: mu (8 bit) | sigma (8 bit)
-320A  // Adresse 0: mu=50, sigma=10
-EC05  // Adresse 1: mu=-20 (als Zweierkomplement EC), sigma=5
-0A19  // Adresse 2: mu=10, sigma=25
-0000  // Adresse 3
+0401  //mu 14 //sigma 3

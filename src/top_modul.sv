@@ -1,88 +1,64 @@
 `timescale 1ns / 1ps
 
 module top_modul(
-    input  logic clk,        
-    input  logic reset,
+    input  logic        clk,        
+    input  logic        reset,
 
-    input logic [7:0] x_in,
-    input logic       x_valid,
+    // --- Input Interface (Direct) ---
+    input  logic [7:0]  x_in,
+    input  logic        x_valid,
+    output logic        x_ready,          // NEW: Handshake feedback to the outside world!
+
+    // --- Output Interface ---
     output logic [31:0] bnn_result,
     output logic        bnn_valid,
-    input logic         ready_to_receive      
+    input  logic        ready_to_receive      
 );
 
-    logic [7:0] fifo_data_out;
-    logic       fifo_empty;
-    logic       alu_ready_out;
-    logic       alu_start;
-    logic       fifo_pop;
-    logic       fifo_full;
-    logic       clt_is_valid;
-    logic       result_ready;
+    // Internal wires for handshake between modules
+    logic clt_is_valid;
+    logic alu_ready_out;
+    logic result_valid;   
 
+    // FSM Control Signals
+    logic clt_enable;
+    logic alu_valid_in;
+    logic alu_ready_in;
 
-    main_fsm u_fsm(
-        .clk(clk),
-        .reset(reset),
-        // Status
-        .fifo_empty(fifo_empty),
-        .clt_is_valid(clt_is_valid),
-        .alu_ready_out(alu_ready_out),
-        // Command
-        .fifo_pop(fifo_pop),
-        .alu_start(alu_start),
-        .bnn_valid(bnn_valid)
-
-    );
-
-
-    
-
-    sync_fifo u_fifo (
-        .clk(clk),
-        .reset(reset),
-
-        .push(x_valid),
-        .wr_data(x_in),
-        .pop(fifo_pop),
-        .rd_data(fifo_data_out),
-        
-        .fifo_full(fifo_full),
-        .fifo_empty(fifo_empty)
-    );
-
-
+    // ROM Wires
     logic [7:0] mu;
     logic [7:0] sigma;
     logic [7:0] bias;
     logic [9:0] epsilon;
-    
-    
-
-    bnn_alu u_alu(
-        .clk(clk),
-        .reset(reset),
-        .valid_in(~fifo_empty & clt_is_valid & ~fifo_full),       
-        .ready_out(alu_ready_out),
-        .x(fifo_data_out),     
-
-        // Rom
-        .mu(mu),
-        .sigma(sigma),
-        .bias(bias),
-        .epsilon(epsilon),
-
-        // Handshake Output    
-        .valid_out(result_valid),
-        .ready_in(alu_start),
-
-        .y_out(bnn_result)
-    );
-
     logic [3:0] rom_addr;
 
     assign rom_addr = 4'd0;
-    // ROM
+
+    // =========================================================================
+    // 1. MAIN FSM 
+    // =========================================================================
+    main_fsm u_fsm(
+        .clk(clk),
+        .reset(reset),
+        
+        // --- Status (Inputs to the FSM) ---
+        .x_valid(x_valid),
+        .clt_is_valid(clt_is_valid),
+        .alu_ready_out(alu_ready_out),
+        .result_valid(result_valid),
+        .ready_to_receive(ready_to_receive),
+        
+        // --- Commands (Outputs from the FSM) ---
+        .x_ready(x_ready),             // Tells the outside world: "Next value please"
+        .clt_enable(clt_enable),       // Starts the noise generator
+        .alu_valid_in(alu_valid_in),   // Starts the ALU
+        .alu_ready_in(alu_ready_in),   // Tells the ALU: "Output was read"
+        .bnn_valid(bnn_valid)          // Top-level output valid
+    );
+
+    // =========================================================================
+    // 2. ROM
+    // =========================================================================
     rom u_rom(
         .address(rom_addr),
         .mu(mu),
@@ -90,16 +66,43 @@ module top_modul(
         .bias(bias)
     );
 
-
-
+    // =========================================================================
+    // 3. CLT (Noise Generator)
+    // =========================================================================
     CLT u_clt(
         .clk(clk),
         .reset(reset),
-        .enable(~fifo_empty),
+        .enable(clt_enable),           
         .clt_valid(clt_is_valid),
         .clt_out(epsilon)
     );
 
+    // =========================================================================
+    // 4. BNN ALU
+    // =========================================================================
+    bnn_alu u_alu(
+        .clk(clk),
+        .reset(reset),
+        
+        // Handshake Input
+        .valid_in(alu_valid_in),       
+        .ready_out(alu_ready_out),
+        
 
+        .x(x_in),     
+
+        // Parameters
+        .mu(mu),
+        .sigma(sigma),
+        .bias(bias),
+        .epsilon(epsilon),
+
+        // Handshake Output    
+        .valid_out(result_valid),      
+        .ready_in(alu_ready_in),
+
+        // Data Output
+        .y_out(bnn_result)
+    );
 
 endmodule

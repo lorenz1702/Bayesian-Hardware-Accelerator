@@ -33,8 +33,8 @@ module bnn_alu(
     assign y_out = y_acc;
     
     always_comb begin
-        w = (18'(mu) <<< 6) + (sigma * epsilon);
-        product = (w * x) + (32'(bias) <<< 12);
+        w = (18'(mu) <<< 7) + (sigma * epsilon);
+        product = (w * x) + (32'(bias) <<< 7);
     end
 
 

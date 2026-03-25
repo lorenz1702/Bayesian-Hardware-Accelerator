@@ -27,8 +27,8 @@ module tb_bnn_alu_crv;
         int result;
         
   
-        calc_w = (int'(mu) <<< 6) + (sigma * epsilon);
-        result = (calc_w * x) + (int'(bias) <<< 12);
+        calc_w = (int'(mu) <<< 7) + (sigma * epsilon);
+        result = (calc_w * x) + (int'(bias) <<< 7);
         return result;
     endfunction
 
