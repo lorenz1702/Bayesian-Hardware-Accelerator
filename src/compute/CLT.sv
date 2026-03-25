@@ -54,19 +54,19 @@ always_ff @(posedge clk) begin
         wait_counter <= 0;
     end else if (enable) begin  
         
-        // Prüfen, ob wir schon WIDTH Takte gewartet haben
-        // (WIDTH - 1, weil wir bei 0 anfangen zu zählen)
+        // Check if we have already waited for WIDTH clock cycles
+        // (WIDTH - 1, because we start counting from 0)
         if (wait_counter == (WIDTH - 1)) begin
-            clt_out <= sum_temp;    // Neue, komplett frische Zahl speichern
-            clt_valid <= 1;         // Valid für genau einen Takt auf 1 setzen!
-            wait_counter <= 0;      // Zähler wieder nullen
+            clt_out <= sum_temp;    
+            clt_valid <= 1;         // Assert valid for exactly one clock cycle!
+            wait_counter <= 0;      // Reset the counter
         end else begin
-            clt_valid <= 0;         // Zahl ist noch nicht fertig
-            wait_counter <= wait_counter + 1; // Zähler hochzählen
+            clt_valid <= 0;         
+            wait_counter <= wait_counter + 1; 
         end
         
     end else begin
-        clt_valid <= 0; // Wenn enable aus ist, ist auch valid aus
+        clt_valid <= 0; 
     end
 end
     

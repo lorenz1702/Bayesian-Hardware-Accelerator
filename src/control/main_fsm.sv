@@ -29,7 +29,7 @@ module main_fsm(
     state_t current_state, next_state;
 
     // =========================================================================
-    // 1. STATE MEMORY (Flip-Flops)
+    // 1. STATE MEMORY 
     // =========================================================================
     always_ff @(posedge clk) begin
         if (reset) begin
@@ -39,9 +39,7 @@ module main_fsm(
         end
     end
 
-    // =========================================================================
-    // 2. NEXT STATE LOGIC & OUTPUT DECODING (Combinational)
-    // =========================================================================
+
     always_comb begin
         
         next_state   = current_state;
@@ -53,9 +51,7 @@ module main_fsm(
 
         case (current_state) 
             
-            // -------------------------------------------------------------
-            // STATE 1: IDLE
-            // -------------------------------------------------------------
+
             IDLE: begin
                 
                 
@@ -65,9 +61,7 @@ module main_fsm(
                 end
             end
 
-            // -------------------------------------------------------------
-            // STATE 2: WAIT_FOR_CLT
-            // -------------------------------------------------------------
+
             WAIT_FOR_CLT: begin
                 clt_enable = 1'b1;
                 alu_ready_in = 1'b1; 
@@ -79,17 +73,16 @@ module main_fsm(
                 end
             end
             
-            // -------------------------------------------------------------
-            // STATE 3: WAIT_FOR_ALU
-            // -------------------------------------------------------------
+
+
             WAIT_FOR_ALU: begin
                 // Directly connect the ALU's valid signal to the top-level output
                 bnn_valid = result_valid;
 
-                // Wait until the ALU is done AND the outside world is ready to read it
+                
                 if (result_valid && ready_to_receive) begin
-                    alu_ready_in = 1'b1; // Tell the ALU: "Your result was read!"
-                    next_state   = IDLE; // Ready for the next calculation
+                    alu_ready_in = 1'b1; // Result was read!
+                    next_state   = IDLE; 
                 end
             end
             

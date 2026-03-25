@@ -2,11 +2,9 @@
 
 module tb_clt_data;
 
-    // Parameters for a wide Gaussian curve (Range approx. -6 to +6 with 12 stages)
+
     localparam int NUM_STAGES = 12;
-    // localparam int WIDTH = 8;
-    // localparam int TAPS = 8'hB8;
-    // localparam logic [WIDTH-1:0] BASE_SEED = 8'hA5;
+
 
     localparam int WIDTH = 16;
     localparam logic [WIDTH-1:0] SEED = 16'h5678;
@@ -14,9 +12,9 @@ module tb_clt_data;
 
 
 
-    // Total number of valid samples to collect for the Python plot
+
     localparam int SAMPLES_TO_COLLECT = 100000;
-    // Ensure the simulation runs long enough to collect all samples
+
     localparam int SIMULATION_CYCLES = (SAMPLES_TO_COLLECT + 10) * WIDTH;
 
     logic clk;
@@ -26,7 +24,7 @@ module tb_clt_data;
     logic clt_valid;
     logic signed [WIDTH + $clog2(NUM_STAGES) - 1 : 0] clt_out;
 
-    // Instantiate the Central Limit Theorem (CLT) module
+
     CLT #(
         .NUM_STAGES(NUM_STAGES),
         .WIDTH(WIDTH),
@@ -40,7 +38,7 @@ module tb_clt_data;
         .clt_out(clt_out)
     );
 
-    // Clock generator (100 MHz -> 10ns period)
+
     always #5 clk = ~clk;
 
     int sample_counter = 0;
@@ -75,18 +73,18 @@ module tb_clt_data;
         // Collection loop
         while (sample_counter < SAMPLES_TO_COLLECT) begin
             @(posedge clk);
-            #1; // Wait for non-blocking assignments to stabilize
+            #1; 
 
             if (clt_valid) begin
-                // Scaling: Convert the raw sum to a normalized float value
+                
                 float_val = real'($signed(clt_out)) / real'(1 << WIDTH);
                 
-                // Write only the raw float value to the file for easy Python parsing
+                
                 $fdisplay(file_id, "%f", float_val);
                 
                 sample_counter++;
                 
-                // Print progress to console every 1000 samples
+                
                 if (sample_counter % 1000 == 0) begin
                     $display("Collected %0d / %0d samples...", sample_counter, SAMPLES_TO_COLLECT);
                 end

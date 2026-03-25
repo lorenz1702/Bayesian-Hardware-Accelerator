@@ -44,7 +44,7 @@ module bnn_alu(
             valid_out <= 0;
         end else begin
             if (valid_in && ready_out) begin
-                // y_acc <= y_acc + product; // Für echtes Akkumulieren
+                
                 y_acc <= product;
                 valid_out <= 1;
             end else if (valid_out && ready_in) begin

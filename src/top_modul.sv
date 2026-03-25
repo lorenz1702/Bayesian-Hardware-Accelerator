@@ -7,7 +7,7 @@ module top_modul(
     // --- Input Interface (Direct) ---
     input  logic [7:0]  x_in,
     input  logic        x_valid,
-    output logic        x_ready,          // NEW: Handshake feedback to the outside world!
+    output logic        ready,          
 
     // --- Output Interface ---
     output logic [31:0] bnn_result,
@@ -49,8 +49,8 @@ module top_modul(
         .ready_to_receive(ready_to_receive),
         
         // --- Commands (Outputs from the FSM) ---
-        .x_ready(x_ready),             // Tells the outside world: "Next value please"
-        .clt_enable(clt_enable),       // Starts the noise generator
+        .ready(ready),             // Tells the outside world: "Next value please"
+        .clt_enable(clt_enable),       // Starts the clt generator
         .alu_valid_in(alu_valid_in),   // Starts the ALU
         .alu_ready_in(alu_ready_in),   // Tells the ALU: "Output was read"
         .bnn_valid(bnn_valid)          // Top-level output valid

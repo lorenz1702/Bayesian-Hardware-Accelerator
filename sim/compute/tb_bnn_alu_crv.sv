@@ -311,20 +311,20 @@ module tb_bnn_alu_crv;
             bias    = tx.bias;
             
             
-            // 2. Handshake starten
+            // 2. Handshake start
             valid_in = 1'b1;
 
-            // 3. Auf die Flanke warten, ALU lesen lassen, DANN abschalten!
+            
             @(posedge clk);
-            #1;               // <--- DER RETTER IN DER NOT!
+            #1;               
             valid_in = 1'b0;
 
-            // 4. Warten bis die ALU fertig gerechnet hat
+            
             wait(valid_out == 1'b1);
             
-            // 5. Einen Takt warten, damit die Queue lesen kann
+            
             @(posedge clk);
-            #1;               // <--- Auch hier sicherheitshalber
+            #1;               
             
         end
         $display("✅ TC-1.5 completed!");
