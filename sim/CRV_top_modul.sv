@@ -78,7 +78,7 @@ module CRV_top_modul;
         .reset(reset),
         .x_in(x_in),
         .x_valid(x_valid),
-        .x_ready(x_ready),
+        .ready(x_ready),
         .bnn_result(bnn_result), 
         .bnn_valid(bnn_valid),
         .ready_to_receive(bnn_ready_in)
@@ -276,6 +276,48 @@ module CRV_top_modul;
         end
 
         $display("✅ TC-2.2 completed!");
+
+
+        $display("\n--------------------------------------------------");
+        $display(" 🚀 STARTING TC-2.3: RANDOM HANDSHAKE");
+        $display("--------------------------------------------------");
+
+       
+        begin
+            
+        int send_items = 0;
+        bnn_ready_in = 1'b1;
+        x_valid = 1'b0;
+
+        // ---------------------------------------------------------
+        // PHASE 1: 50 Input with random Handshakes
+        // ---------------------------------------------------------
+
+        while (send_items < 50) begin
+            @(posedge clk);
+            #1;
+
+            if ($urandom_range(0, 3) == 0) bnn_ready_in = ~bnn_ready_in;
+
+            if (x_valid == 1'b0 && $urandom_range(0, 3) == 0) begin
+                if (!tx.randomize()) $fatal("Randomize failed!");
+                x_in = tx.x_in;
+                x_valid = 1'b1;
+            end
+
+            if(x_valid && x_ready) begin
+                x_valid = 1'b0;
+                send_items++;
+            end
+        end
+
+
+        end
+
+        
+
+
+
 
         $display("\n--------------------------------------------------");
         $display(" 🚀 STARTING TC-3.1: IN-FLIGHT RESET");

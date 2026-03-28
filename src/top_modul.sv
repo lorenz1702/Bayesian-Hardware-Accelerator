@@ -49,7 +49,7 @@ module top_modul(
         .ready_to_receive(ready_to_receive),
         
         // --- Commands (Outputs from the FSM) ---
-        .ready(ready),             // Tells the outside world: "Next value please"
+        .ready(ready),             // Tells the outside world: "Top modul is ready"
         .clt_enable(clt_enable),       // Starts the clt generator
         .alu_valid_in(alu_valid_in),   // Starts the ALU
         .alu_ready_in(alu_ready_in),   // Tells the ALU: "Output was read"

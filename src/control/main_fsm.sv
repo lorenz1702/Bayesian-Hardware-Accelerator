@@ -12,7 +12,7 @@ module main_fsm(
     input  logic ready_to_receive,
 
     // --- Commands (Outputs to outside & datapath) ---
-    output logic x_ready,
+    output logic ready,
     output logic clt_enable,
     output logic alu_valid_in,
     output logic alu_ready_in,
@@ -43,7 +43,7 @@ module main_fsm(
     always_comb begin
         
         next_state   = current_state;
-        x_ready      = 1'b0;
+        ready      = 1'b0;
         clt_enable   = 1'b0;
         alu_valid_in = 1'b0;
         alu_ready_in = 1'b0;
@@ -68,7 +68,7 @@ module main_fsm(
                 
                 if (clt_is_valid && alu_ready_out) begin
                     alu_valid_in = 1'b1; 
-                    x_ready      = 1'b1; 
+                    ready      = 1'b1; 
                     next_state   = WAIT_FOR_ALU;
                 end
             end
