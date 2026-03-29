@@ -15,12 +15,24 @@ This project calculates a 1D Bayesian Linear Regression directly in hardware:
 
 
 ---
+##  How to initialize the Project
 
+```bash
+echo "source /tools/Xilinx/2025.1/Vivado/settings64.sh"
 
+source ~/.bashrc
+
+chmod +x scripts/run_sim.sh
+
+chmod +x scripts/run_build.sh
+```
+---
 
 ##  How to Run the Project (Using Make)
 
 This project includes a `Makefile` to fully automate the simulation and build process using Vivado. You don't need to open the Vivado GUI to verify the design.
+
+
 
 ### Available Commands:
 * `make help` - Shows all available commands.
