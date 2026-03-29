@@ -1,6 +1,6 @@
 #  Verification Plan: BNN ALU (Datapath & Handshake)
 
-## 🎯 Objective
+##  Objective
 This verification plan outlines the strategy for testing the Bayesian Neural Network Arithmetic Logic Unit (`bnn_alu`). The focus is on verifying correct **signed fixed-point arithmetic**, handling of edge cases (overflows/zeroes), and the robustness of the AXI-Stream-like **handshake protocol** (`valid`/`ready`).
 
 ##  Setup & Infrastructure
