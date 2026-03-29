@@ -1,8 +1,8 @@
-# 🚀 Top-Level CRV Verification Plan: Bayesian Hardware Accelerator
+#  Top-Level CRV Verification Plan: Bayesian Hardware Accelerator
 
 This directory contains the Constrained Random Verification (CRV) environment for the `top_modul` of the BNN (Bayesian Neural Network) Accelerator. While the unit tests (e.g., `bnn_alu`) validate the mathematical correctness of the data paths at the bit level, this top-level testbench focuses on **module integration, data flow, backpressure handling, direct AXI-style handshaking, and FSM transitions**.
 
-## 🛠️ To-Dos (Pre-Verification Checklist)
+##  To-Dos (Pre-Verification Checklist)
 
 Before writing the CRV testbench, the following tasks must be completed in the RTL code and the test environment to ensure a verifiable design:
 
@@ -10,7 +10,7 @@ Before writing the CRV testbench, the following tasks must be completed in the R
 
 ---
 
-## 📋 Test Cases (Verification Plan)
+##  Test Cases (Verification Plan)
 
 ### Category 1: Basic Data Flow & Sanity Checks
 **Goal:** Verify that a simple transaction flows seamlessly through all sub-modules (CLT -> ALU -> FSM) without getting stuck.
@@ -31,7 +31,7 @@ Before writing the CRV testbench, the following tasks must be completed in the R
 - [x] **TC-2.2 Sender Starvation**
   - **Description:** The receiver is ready (`ready_to_receive = 1`), but no new data arrives (`x_valid = 0`).
   - **Expected Behavior:** The FSM must remain in the `IDLE` state. It must hold `bnn_valid = 0`. The ALU must not output "ghost data" (repeated old values) and `ready` must stay `0`.
-- [ ] **TC-2.3 Random Handshake**
+- [x] **TC-2.3 Random Handshake**
   - **Description:** Both `x_valid` and `ready_to_receive` toggle completely randomly (using CRV constraints to inject 0-5 cycles of delay between assertions).
   - **Expected Behavior:** The system must operate with a stuttering but flawless data flow. The Golden Model (using a `[$]` queue) must match the hardware outputs 100% in the correct order.
 
@@ -47,7 +47,7 @@ Before writing the CRV testbench, the following tasks must be completed in the R
 
 ---
 
-## 🏗️ Top-Level Testbench Architecture
+## Top-Level Testbench Architecture
 To execute these test cases, the testbench will be structured into the following components:
 1. **Clock & Reset Generator.**
 2. **TopTx CRV Class:** Randomizes `x_in` and generates dynamic wait times (delays) for the AXI-style valid/ready handshake.

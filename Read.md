@@ -1,80 +1,55 @@
-# 🗓️ 1-Wochen-Sprint: Bayesian Hardware Accelerator
+# Hardware Accelerator for a Bayesian Neuron
 
-Um das Projekt effizient in einer Woche abzuschließen, wurde der ursprüngliche 6-Wochen-Plan in einen kompakten Tages-Plan (Tag 1 bis 5, plus Wochenende als Puffer) transformiert. Um alle geforderten Design-Patterns der Vorlesung abzudecken, werden gezielt smarte **"Micro-Features"** (z. B. ein simpler Arbiter und ein Basis-CDC-Synchronizer) integriert, anstatt überdimensionierte Subsysteme zu programmieren.
+This project is a hardware implementation of a **Bayesian Neuron** written in SystemVerilog. It acts as a  probabilistic hardware accelerator that can be used as the fundamental building block (MAC node) for Bayesian Neural Networks (BNNs).
 
----
+##  What is a Bayesian Neuron?
+In a standard artificial neural network, a weight is just a fixed number (for example, w = 5). The network is always 100% confident in its calculation.
 
-### 🚀 Tag 1: Zufall & Grundlagen-Arithmetik (The CLT Engine)
-**🎯 Fokus:** Implementierung der `ϵ ∼ N(0,1)` Gauss-Verteilung.  
-**🧩 Abgedeckte Patterns:** `Structural and generic code`, `Arithmetic blocks`
+In a **Bayesian Neural Network**, weights are not fixed numbers. Instead, they are probability distributions. Every weight has a **mean** (the average value) and a **variance / uncertainty** (how unsure the network is about this weight). 
 
-**✅ Aufgaben:**
-- [X] Schreibe ein parametrisierbares LFSR-Modul (nutze `parameter` für die Breite).
-- [X] Instanziiere 12 dieser LFSRs und nutze einen Addierer-Baum (**Adder Tree**), um sie in einem Takt aufzusummieren (Anwendung des Zentralen Grenzwertsatzes / CLT).
-- [ ] Ziehe einen konstanten Offset ab, um den Mittelwert auf 0 zu zentrieren.
 
-> **🏆 Tages-Ziel:** Ein funktionsfähiges Modul, das jeden Taktzyklus eine normalverteilte Zufallszahl generiert.
+This project calculates a 1D Bayesian Linear Regression directly in hardware:
+`y = (w * x) + bias` (where `w` is generated with random noise in every clock cycle).
 
----
+![Bayesian Linear Regression Model](bayesian_regression_plot.png)
 
-### 💾 Tag 2: Speicherarchitektur & Arbitration (Memory & Access)
-**🎯 Fokus:** Verwaltung der Eingangsdaten `X` und der Parameter `(μ, σ)`.  
-**🧩 Abgedeckte Patterns:** `Memory`, `Arbitration`
-
-**✅ Aufgaben:**
-- [ ] Implementiere einen **Simple Dual Port RAM** für die Gewichts-Parameter `μ` und `σ`.
-- [ ] Implementiere einen **Synchronous FIFO** für die Pufferung der Eingangsdaten `X`.
-- [ ] **Micro-Feature Arbitration:** Baue einen simplen **Priority Arbiter**, der regelt, wer das RAM auslesen darf (z. B. ein fiktiver Debug-Port mit Prio 1 und die Haupt-FSM mit Prio 2).
-
-> **🏆 Tages-Ziel:** Die Datenhaltung steht und alle Zugriffe sind sauber geregelt.
 
 ---
 
-### 🧮 Tag 3: Rechenkern & Kommunikation (Compute Core)
-**🎯 Fokus:** Berechnung der Regression `y = (w + ϵ) · x + b`.  
-**🧩 Abgedeckte Patterns:** `Arithmetic blocks (MAC)`, `Communication (Handshake)`
 
-**✅ Aufgaben:**
-- [ ] Baue die **MAC-Einheit** (Multiply-Accumulate).
-- [ ] Integriere die Mathematik: Berechne zuerst das Gewicht `w = μ + (σ × ϵ)`, speise es dann in den Akkumulator für `y` ein.
-- [ ] **Communication:** Statte den Rechenkern und den FIFO vom Vortag mit einem **Valid/Ready-Handshake** aus. Der Rechenkern rechnet nur, wenn der FIFO `Valid` sendet und der Kern `Ready` ist.
 
-> **🏆 Tages-Ziel:** Der mathematische Kern rechnet korrekt und reagiert dynamisch auf anliegende Daten.
+##  How to Run the Project (Using Make)
 
----
+This project includes a `Makefile` to fully automate the simulation and build process using Vivado. You don't need to open the Vivado GUI to verify the design.
 
-### 🧠 Tag 4: Systemsteuerung, CDC & Integration (The SoC Top-Level)
-**🎯 Fokus:** Das "Gehirn" des Systems und der finale Zusammenbau.  
-**🧩 Abgedeckte Patterns:** `State machines (complex)`, `Clock-domain crossing (CDC)`, `Structural code`
-
-**✅ Aufgaben:**
-- [ ] **Micro-Feature CDC:** Das System wird von außen mit einem asynchronen `start_calc` Signal getriggert. Nutze einen **2-FF CDC Synchronizer**, um dieses Signal sicher in die eigene Taktdomäne zu holen.
-- [ ] Entwickle die Haupt-**Moore-FSM** (Zustände: `IDLE`, `FETCH_WEIGHTS`, `CALC_MAC`, `DONE`), die den Ablauf orchestriert, sobald das Start-Signal anliegt.
-- [ ] **Integration:** Instanziiere alle Blöcke (CLT, RAM, FIFO, Arbiter, MAC, FSM) in einem sauberen `Top_Level.sv` unter Nutzung von SystemVerilog Interfaces.
-
-> **🏆 Tages-Ziel:** Das Hardware-Design (RTL) ist zu 100 % fertig, verbunden und synthesefähig.
+### Available Commands:
+* `make help` - Shows all available commands.
+* `make sim TB=<testbench_name>` - Runs a specific testbench.
+* `make build TOP=<module_name>` - Synthesizes the design and generates the bitstream.
+* `make clean` - Deletes all temporary Vivado logs and folders.
 
 ---
 
-### 🧪 Tag 5: Verifikation (CRV & DPI-C)
-**🎯 Fokus:** Beweisen, dass das System funktioniert (ohne unnötigen UVM-Overhead).  
-**🧩 Abgedeckte Patterns:** `Various verification techniques`
+##  Verification Steps
 
-**✅ Aufgaben:**- [ ] Schreibe ein kurzes C-Skript, das exakt die Bayes'sche lineare Regression rechnet, und binde es über **DPI-C** (Direct Programming Interface) in SystemVerilog ein.
-- [ ] Baue eine kompakte, strukturierte Testbench (UVM-lite oder Layered Testbench).
-- [ ] Nutze **Constrained Random Verification (CRV)**, um zufällige Matrizen für `X`, `μ` und `σ` zu erzeugen.
-- [ ] Füttere die Stimuli in das Top-Level-Modul und vergleiche am Ende jeden Taktzyklus das Hardware-Ergebnis mit dem Output des DPI-C Modells.
-- [ ] Ergänze `covergroups` (Functional Coverage), um zu beweisen, dass alle FSM-Zustände erreicht wurden.
+Please run the testbenches in the following order to understand the project:
 
-> **🏆 Tages-Ziel:** Eine grüne Simulations-Konsole ohne Mismatches und ein sauberer Coverage-Report.
+### 1. Main Verification (Top-Level CRV)
+This tests the entire system integration (math, data flow, and AXI-handshake) using Constrained Random Verification. It compares the hardware output against a software-calculated "Golden Model".
+```bash
+make sim TB=CRV_top_model
+```
 
----
+### 2. ALU Verification
+This is to verify the Arithmetic Logic Unit:
 
-### ☕ Wochenende: Puffer & Dokumentation
-**🎯 Fokus:** Fehlerbehebung und Sicherung der Note.
+```bash
+make sim TB=tb_bnn_alu_crv
+```
 
-**✅ Aufgaben:**
-- [ ] Nutze die Zeit als Puffer, um verbleibende Bugs aus Tag 5 zu fixen.
-- [ ] **Dokumentation schreiben:** Liste im README exakt auf, *wo* welches geforderte Pattern der Guideline eingesetzt wurde (z.B. *"CDC: Eingesetzt für das Start-Signal im Modul `sync_block.sv`"*). 
+### 3. Application & Statistical Proof
+The testbench demonstrates the application of the Bayesian Neuron. It sends the exact same input value into the hardware 100 times. It then calculates the Empirical Mean and Variance. The variance quantifies the uncertainty.
 
-> **💡 Tipp:** Ein detailliertes Mapping der Projekt-Guidelines auf den eigenen Code macht dem Korrektor das Leben leicht und sichert eine sehr gute Note!
+```bash
+make sim TB=tb_bnn_statistics
+```

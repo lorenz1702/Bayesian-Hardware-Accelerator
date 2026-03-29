@@ -66,7 +66,7 @@ module main_fsm(
                 clt_enable = 1'b1;
                 alu_ready_in = 1'b1; 
                 
-                if (clt_is_valid && alu_ready_out) begin
+                if (clt_is_valid && alu_ready_out && ready_to_receive && x_valid) begin
                     alu_valid_in = 1'b1; 
                     ready      = 1'b1; 
                     next_state   = WAIT_FOR_ALU;

@@ -7,7 +7,7 @@ module top_modul(
     // --- Input Interface (Direct) ---
     input  logic [7:0]  x_in,
     input  logic        x_valid,
-    output logic        ready,          
+    output logic        ready,  // Hardware is ready         
 
     // --- Output Interface ---
     output logic [31:0] bnn_result,
