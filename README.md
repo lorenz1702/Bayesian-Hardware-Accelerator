@@ -18,7 +18,7 @@ This project calculates a 1D Bayesian Linear Regression directly in hardware:
 ##  How to initialize the Project
 
 ```bash
-echo "source /tools/Xilinx/2025.1/Vivado/settings64.sh"
+echo "source path/to/your/Vivado/2025.1/settings64.sh"
 
 source ~/.bashrc
 
@@ -30,7 +30,7 @@ chmod +x scripts/run_build.sh
 
 ##  How to Run the Project (Using Make)
 
-This project includes a `Makefile` to fully automate the simulation and build process using Vivado. You don't need to open the Vivado GUI to verify the design.
+This project includes a `Makefile` to the simulation and build process using Vivado. You don't need to open the Vivado GUI to verify the design.
 
 
 
@@ -47,7 +47,7 @@ This project includes a `Makefile` to fully automate the simulation and build pr
 Please run the testbenches in the following order to understand the project:
 
 ### 1. Main Verification (Top-Level CRV)
-This tests the entire system integration (math, data flow, and AXI-handshake) using Constrained Random Verification. It compares the hardware output against a software-calculated "Golden Model".
+This tests the system integration (math, data flow, and AXI-handshake) using Constrained Random Verification. It compares the hardware output against a software-calculated "Golden Model".
 ```bash
 make sim TB=CRV_top_model
 ```
